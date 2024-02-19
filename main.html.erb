@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+</head>
+
+<body>
+    <h1>Weather Forecast</h1>
+
+    <%= form_with(url: "/pages", method: "get") do %>
+        <%= text_field_tag('user_input') %>
+        <%= submit_tag('Submit') %>        
+    <% end %>
+
+
+        <% require 'httparty' %>
+        <% require 'json' %>
+        
+        <% ipapi_key = '9d184f306e4a698a8c4b7ae55792bc5f' %>
+        <% ipapi_response = HTTParty.get("http://api.ipapi.com/#{@user_input}?access_key=#{ipapi_key}") %>
+        <% api_result = JSON.parse(ipapi_response.body) %>
+
+        <% latitude = api_result['latitude'] %>
+        <% longitude = api_result['longitude'] %>
+        
+        <% response = HTTParty.get("https://api.open-meteo.com/v1/forecast?latitude=#{latitude}&longitude=#{longitude}&hourly=temperature_2m&temperature_unit=fahrenheit&wind_speed_unit=mph&precipitation_unit=inch") %>
+        <% weather_response = JSON.parse(response.body) %>
+        <% temp_hourly = weather_response["hourly"]["temperature_2m"] %>
+        
+        <p>
+        <%= ("\nday 1:\t\t #{temp_hourly[0..23]} \n") %>
+        </p>
+        <p>
+        <%= ("\nday 2:\t\t #{temp_hourly[24..47]} \n") %>
+        </p>
+        <p>
+        <%= ("\nday 3:\t\t #{temp_hourly[48..71]} \n") %>
+        </p>
+        <p>
+        <%= ("\nday 4:\t\t #{temp_hourly[72..95]} \n") %>
+        </p>
+        <p>
+        <%= ("\nday 5:\t\t #{temp_hourly[96..119]} \n") %>
+        </p>
+        <p>
+        <%= ("\nday 6:\t\t #{temp_hourly[120..143]} \n") %>
+        </p>
+        <p>
+        <%= ("\nday 7:\t\t #{temp_hourly[144..167]} \n") %>
+        </p>
+
+</body>
+</html>
+
